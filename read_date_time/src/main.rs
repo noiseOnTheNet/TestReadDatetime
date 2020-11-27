@@ -58,7 +58,7 @@ impl Node{
     let stars = std::iter::repeat("*").take(level).collect::<String>();
     println!("{} {}",stars,self.title);
     if let Some(sd)=self.scheduled {
-      println!(":SCHEDULED: <{}-{:02}-{:02}>",sd.year(),sd.month(),sd.day());
+      println!("SCHEDULED: <{}-{:02}-{:02}>",sd.year(),sd.month(),sd.day());
     }
     for segment in &self.content{
       &segment.display(0);
@@ -125,7 +125,10 @@ fn main() {
                              Text::ChecklistText(generate_list())
                              ]
             }).collect();
-          let root = NodeBuilder::new(String::from("October"))   .add_children(nodes).build();
+          let month = dt.format("%B %Y").to_string();
+          let month_node = NodeBuilder::new(String::from(month)).add_children(nodes).build();
+          let planning_node = NodeBuilder::new("Planning".to_string()).add_children(vec![month_node]).build();
+          let root = NodeBuilder::new("Group".to_string()).add_children(vec![planning_node]).build();
           root.display(1);
         },
         Err(m) => println!("parse failed of '{}': {}",value,m)
