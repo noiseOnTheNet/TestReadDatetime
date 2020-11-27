@@ -40,7 +40,7 @@ impl ListItem{
   }
   fn display(& self, level : usize){
     let indent = std::iter::repeat("  ").take(level).collect::<String>();
-    print!("\n{}- ",indent);
+    print!("\n{}- [ ] ",indent);
     for segment in &self.content{
       &segment.display(level);
     }
@@ -98,7 +98,13 @@ impl NodeBuilder {
 
 fn generate_list() -> CheckList{
   CheckList{
-    items : vec![ListItem::from_text(Text::PlainText("Hi mom".into()))]
+    items : (vec![
+      "insert new activities",
+      "update jira",
+      "read emails"
+    ]).iter().map(
+      |x| ListItem::from_text(Text::PlainText(x.to_string()))
+    ).collect()
   }
 }
 fn main() {
@@ -115,7 +121,7 @@ fn main() {
               title : String::from("Daily planning"),
               scheduled : Some(dt + Duration::days(i)),
               children : Vec::new(),
-              content : vec![Text::PlainText("Hi mum".into()), 
+              content : vec![Text::PlainText("Plan, Do, Check, Act".into()), 
                              Text::ChecklistText(generate_list())
                              ]
             }).collect();
