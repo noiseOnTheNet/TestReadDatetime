@@ -49,6 +49,7 @@ impl ListItem{
 #[derive(Debug)]
 struct Node {
   title : String,
+  todo : Option<String>,
   scheduled : Option<DateTime<Utc>>,
   children : Vec<Node>,
   content : Vec<Text>
@@ -56,7 +57,11 @@ struct Node {
 impl Node{
   fn display (self : & Node, level: usize){
     let stars = std::iter::repeat("*").take(level).collect::<String>();
-    println!("{} {}",stars,self.title);
+    print!("{} ",stars);
+    if let Some(todo) = &self.todo {
+      print!("{} ",todo);
+    }
+    println!("{}",self.title);
     if let Some(sd)=self.scheduled {
       println!("SCHEDULED: <{}-{:02}-{:02}>",sd.year(),sd.month(),sd.day());
     }
@@ -71,6 +76,7 @@ impl Node{
 }
 struct NodeBuilder {
   title : String,
+  todo : Option<String>,
   scheduled : Option<DateTime<Utc>>,
   children : Vec<Node>
 }
@@ -78,6 +84,7 @@ impl NodeBuilder {
   fn new(title : String) -> NodeBuilder{
     NodeBuilder{
       title : title,
+      todo : None,
       scheduled : None,
       children : Vec::new()
     }
@@ -86,9 +93,14 @@ impl NodeBuilder {
     self.children = children;
     self
   }
+  fn set_todo(mut self, todo : String) -> NodeBuilder {
+    self.todo = Some(todo);
+    self
+  }
   fn build(self) -> Node{
     Node{
       title : self.title,
+      todo : self.todo,
       scheduled : self.scheduled,
       children : self.children,
       content : Vec::new()
@@ -119,14 +131,15 @@ fn main() {
             map(|i| 
             Node {
               title : String::from("Daily planning"),
+              todo : Some("TODO".into()),
               scheduled : Some(dt + Duration::days(i)),
               children : Vec::new(),
               content : vec![Text::PlainText("Plan, Do, Check, Act".into()), 
                              Text::ChecklistText(generate_list())
                              ]
             }).collect();
-          let month = dt.format("%B %Y").to_string();
-          let month_node = NodeBuilder::new(String::from(month)).add_children(nodes).build();
+          let month = dt.format("%B %Y Planning").to_string();
+          let month_node = NodeBuilder::new(String::from(month)).add_children(nodes).set_todo("TODO".into()).build();
           let planning_node = NodeBuilder::new("Planning".to_string()).add_children(vec![month_node]).build();
           let root = NodeBuilder::new("Group".to_string()).add_children(vec![planning_node]).build();
           root.display(1);
