@@ -1,2 +1,2 @@
-run = "echo $( pwd ) && cd read_date_time && cargo run '2020-01-01 00:00:00'"
+run = "echo $( pwd ) && cd read_date_time && cargo run --verbose '2020-12-01 00:00:00'"
 language = "rust"

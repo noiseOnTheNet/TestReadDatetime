@@ -127,7 +127,7 @@ fn main() {
       match rdt{
         Ok(dt) => {
           println!("starting date: {}",dt.to_string());
-          let nodes : Vec<Node> = (0..30).
+          let mut nodes : Vec<Node> = (0..30).
             map(|i| 
             Node {
               title : String::from("Daily planning"),
@@ -138,6 +138,48 @@ fn main() {
                              Text::ChecklistText(generate_list())
                              ]
             }).collect();
+          let mut nodes2 : Vec<Node> = (0..30).
+            map(|i|
+              dt + Duration::days(i)
+            ).filter(|d|
+            d.weekday() == Weekday::Tue
+            ).map(|d| 
+            Node {
+              title : String::from("Software Weekly"),
+              todo : Some("TODO".into()),
+              scheduled : Some(d),
+              children : Vec::new(),
+              content : vec![]
+            }).collect();
+          let mut nodes3 : Vec<Node> = (0..30).
+            map(|i|
+              dt + Duration::days(i)
+            ).filter(|d|
+            d.weekday() == Weekday::Tue
+            ).map(|d| 
+            Node {
+              title : String::from("Software Update"),
+              todo : Some("TODO".into()),
+              scheduled : Some(d),
+              children : Vec::new(),
+              content : vec![]
+            }).collect();
+          let mut nodes1 : Vec<Node> = (0..30).
+            map(|i|
+              dt + Duration::days(i)
+            ).filter(|d|
+            d.weekday() == Weekday::Mon
+            ).map(|d| 
+            Node {
+              title : String::from("Send Accountability"),
+              todo : Some("TODO".into()),
+              scheduled : Some(d),
+              children : Vec::new(),
+              content : vec![]
+            }).collect();
+          nodes.append(&mut nodes1);
+          nodes.append(&mut nodes2);
+          nodes.append(&mut nodes3);
           let month = dt.format("%B %Y Planning").to_string();
           let month_node = NodeBuilder::new(String::from(month)).add_children(nodes).set_todo("TODO".into()).build();
           let planning_node = NodeBuilder::new("Planning".to_string()).add_children(vec![month_node]).build();
