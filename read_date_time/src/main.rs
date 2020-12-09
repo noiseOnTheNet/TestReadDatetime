@@ -15,7 +15,23 @@ impl Text{
     }
   }
 }
-
+#[derive(Debug)]
+enum Priority{
+  A,
+  B,
+  C,
+  D
+}
+impl Priority{
+  fn display(& self) -> String{
+    match self {
+      Priority::A => "[#A]".into(),
+      Priority::B => "[#B]".into(),
+      Priority::C => "[#C]".into(),
+      Priority::D => "[#D]".into(),
+    }
+  }
+}
 #[derive(Debug)]
 struct CheckList {
   items : Vec<ListItem>
@@ -50,6 +66,7 @@ impl ListItem{
 struct Node {
   title : String,
   todo : Option<String>,
+  priority : Option<Priority>,
   scheduled : Option<DateTime<Utc>>,
   children : Vec<Node>,
   content : Vec<Text>
@@ -60,6 +77,9 @@ impl Node{
     print!("{} ",stars);
     if let Some(todo) = &self.todo {
       print!("{} ",todo);
+    }
+    if let Some(priority) = &self.priority {
+      print!("{} ",priority.display());
     }
     println!("{}",self.title);
     if let Some(sd)=self.scheduled {
@@ -77,6 +97,7 @@ impl Node{
 struct NodeBuilder {
   title : String,
   todo : Option<String>,
+  priority : Option<Priority>,
   scheduled : Option<DateTime<Utc>>,
   children : Vec<Node>
 }
@@ -85,6 +106,7 @@ impl NodeBuilder {
     NodeBuilder{
       title : title,
       todo : None,
+      priority : None,
       scheduled : None,
       children : Vec::new()
     }
@@ -97,10 +119,15 @@ impl NodeBuilder {
     self.todo = Some(todo);
     self
   }
+  fn set_priority(mut self, priority : Priority) -> NodeBuilder {
+    self.priority = Some(priority);
+    self
+  }
   fn build(self) -> Node{
     Node{
       title : self.title,
       todo : self.todo,
+      priority : self.priority,
       scheduled : self.scheduled,
       children : self.children,
       content : Vec::new()
@@ -132,6 +159,7 @@ fn main() {
             Node {
               title : String::from("Daily planning"),
               todo : Some("TODO".into()),
+              priority : Some(Priority::A),
               scheduled : Some(dt + Duration::days(i)),
               children : Vec::new(),
               content : vec![Text::PlainText("Plan, Do, Check, Act".into()), 
@@ -146,7 +174,8 @@ fn main() {
             ).map(|d| 
             Node {
               title : String::from("Software Weekly"),
-              todo : Some("TODO".into()),
+              todo : None,
+              priority : None,
               scheduled : Some(d),
               children : Vec::new(),
               content : vec![]
@@ -159,7 +188,8 @@ fn main() {
             ).map(|d| 
             Node {
               title : String::from("Software Update"),
-              todo : Some("TODO".into()),
+              todo : None,
+              priority : None,
               scheduled : Some(d),
               children : Vec::new(),
               content : vec![]
@@ -173,6 +203,21 @@ fn main() {
             Node {
               title : String::from("Send Accountability"),
               todo : Some("TODO".into()),
+              priority : Some(Priority::B),
+              scheduled : Some(d),
+              children : Vec::new(),
+              content : vec![]
+            }).collect();
+          let mut nodes4 : Vec<Node> = (0..30).
+            map(|i|
+              dt + Duration::days(i)
+            ).filter(|d|
+            d.weekday() == Weekday::Thu
+            ).map(|d| 
+            Node {
+              title : String::from("Technical Staff"),
+              todo : None,
+              priority : None,
               scheduled : Some(d),
               children : Vec::new(),
               content : vec![]
@@ -180,6 +225,7 @@ fn main() {
           nodes.append(&mut nodes1);
           nodes.append(&mut nodes2);
           nodes.append(&mut nodes3);
+          nodes.append(&mut nodes4);
           let month = dt.format("%B %Y Planning").to_string();
           let month_node = NodeBuilder::new(String::from(month)).add_children(nodes).set_todo("TODO".into()).build();
           let planning_node = NodeBuilder::new("Planning".to_string()).add_children(vec![month_node]).build();
