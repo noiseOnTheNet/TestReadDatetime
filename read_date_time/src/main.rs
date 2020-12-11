@@ -2,147 +2,16 @@ use chrono::prelude::*;
 use chrono::Duration;
 use chrono::DateTime;
 use std::env;
-#[derive(Debug)]
-enum Text{
-  PlainText(String),
-  ChecklistText(CheckList)
-}
-impl Text{
-  fn display(& self, level: usize){
-    match self{
-      Text::PlainText(content) => print!(" {}",content),
-      Text::ChecklistText(list) => list.display(level)
-    }
-  }
-}
-#[derive(Debug)]
-enum Priority{
-  A,
-  B,
-  C,
-  D
-}
-impl Priority{
-  fn display(& self) -> String{
-    match self {
-      Priority::A => "[#A]".into(),
-      Priority::B => "[#B]".into(),
-      Priority::C => "[#C]".into(),
-      Priority::D => "[#D]".into(),
-    }
-  }
-}
-#[derive(Debug)]
-struct CheckList {
-  items : Vec<ListItem>
-}
-impl CheckList{
-  fn display(& self, level : usize){
-    for item in &self.items {
-      &item.display(level + 1);
-    }
-  }
-}
+mod org;
 
-#[derive(Debug)]
-struct ListItem {
-  content : Vec<Text>
-}
-impl ListItem{
-  fn from_text(content : Text) -> ListItem{
-    ListItem{
-      content : vec![content]
-    }
-  }
-  fn display(& self, level : usize){
-    let indent = std::iter::repeat("  ").take(level).collect::<String>();
-    print!("\n{}- [ ] ",indent);
-    for segment in &self.content{
-      &segment.display(level);
-    }
-  }
-}
-#[derive(Debug)]
-struct Node {
-  title : String,
-  todo : Option<String>,
-  priority : Option<Priority>,
-  scheduled : Option<DateTime<Utc>>,
-  children : Vec<Node>,
-  content : Vec<Text>
-}
-impl Node{
-  fn display (self : & Node, level: usize){
-    let stars = std::iter::repeat("*").take(level).collect::<String>();
-    print!("{} ",stars);
-    if let Some(todo) = &self.todo {
-      print!("{} ",todo);
-    }
-    if let Some(priority) = &self.priority {
-      print!("{} ",priority.display());
-    }
-    println!("{}",self.title);
-    if let Some(sd)=self.scheduled {
-      println!("SCHEDULED: <{}-{:02}-{:02}>",sd.year(),sd.month(),sd.day());
-    }
-    for segment in &self.content{
-      &segment.display(0);
-      println!("")
-    }
-    for c in &self.children{
-      c.display(level + 1);
-    }  
-  }
-}
-struct NodeBuilder {
-  title : String,
-  todo : Option<String>,
-  priority : Option<Priority>,
-  scheduled : Option<DateTime<Utc>>,
-  children : Vec<Node>
-}
-impl NodeBuilder {
-  fn new(title : String) -> NodeBuilder{
-    NodeBuilder{
-      title : title,
-      todo : None,
-      priority : None,
-      scheduled : None,
-      children : Vec::new()
-    }
-  }
-  fn add_children(mut self  , children : Vec<Node>)-> NodeBuilder{
-    self.children = children;
-    self
-  }
-  fn set_todo(mut self, todo : String) -> NodeBuilder {
-    self.todo = Some(todo);
-    self
-  }
-  fn set_priority(mut self, priority : Priority) -> NodeBuilder {
-    self.priority = Some(priority);
-    self
-  }
-  fn build(self) -> Node{
-    Node{
-      title : self.title,
-      todo : self.todo,
-      priority : self.priority,
-      scheduled : self.scheduled,
-      children : self.children,
-      content : Vec::new()
-    }
-  }
-}
-
-fn generate_list() -> CheckList{
-  CheckList{
+fn generate_list() -> org::CheckList{
+  org::CheckList{
     items : (vec![
       "insert new activities",
       "update jira",
       "read emails"
     ]).iter().map(
-      |x| ListItem::from_text(Text::PlainText(x.to_string()))
+      |x| org::ListItem::from_text(org::Text::PlainText(x.to_string()))
     ).collect()
   }
 }
@@ -154,25 +23,25 @@ fn main() {
       match rdt{
         Ok(dt) => {
           println!("starting date: {}",dt.to_string());
-          let mut nodes : Vec<Node> = (0..30).
+          let mut nodes : Vec<org::Node> = (0..30).
             map(|i| 
-            Node {
+            org::Node {
               title : String::from("Daily planning"),
               todo : Some("TODO".into()),
-              priority : Some(Priority::A),
+              priority : Some(org::Priority::A),
               scheduled : Some(dt + Duration::days(i)),
               children : Vec::new(),
-              content : vec![Text::PlainText("Plan, Do, Check, Act".into()), 
-                             Text::ChecklistText(generate_list())
+              content : vec![org::Text::PlainText("Plan, Do, Check, Act".into()), 
+                             org::Text::ChecklistText(generate_list())
                              ]
             }).collect();
-          let mut nodes2 : Vec<Node> = (0..30).
+          let mut nodes2 : Vec<org::Node> = (0..30).
             map(|i|
               dt + Duration::days(i)
             ).filter(|d|
             d.weekday() == Weekday::Tue
             ).map(|d| 
-            Node {
+            org::Node {
               title : String::from("Software Weekly"),
               todo : None,
               priority : None,
@@ -180,13 +49,13 @@ fn main() {
               children : Vec::new(),
               content : vec![]
             }).collect();
-          let mut nodes3 : Vec<Node> = (0..30).
+          let mut nodes3 : Vec<org::Node> = (0..30).
             map(|i|
               dt + Duration::days(i)
             ).filter(|d|
             d.weekday() == Weekday::Tue
             ).map(|d| 
-            Node {
+            org::Node {
               title : String::from("Software Update"),
               todo : None,
               priority : None,
@@ -194,27 +63,27 @@ fn main() {
               children : Vec::new(),
               content : vec![]
             }).collect();
-          let mut nodes1 : Vec<Node> = (0..30).
+          let mut nodes1 : Vec<org::Node> = (0..30).
             map(|i|
               dt + Duration::days(i)
             ).filter(|d|
             d.weekday() == Weekday::Mon
             ).map(|d| 
-            Node {
+            org::Node {
               title : String::from("Send Accountability"),
               todo : Some("TODO".into()),
-              priority : Some(Priority::B),
+              priority : Some(org::Priority::B),
               scheduled : Some(d),
               children : Vec::new(),
               content : vec![]
             }).collect();
-          let mut nodes4 : Vec<Node> = (0..30).
+          let mut nodes4 : Vec<org::Node> = (0..30).
             map(|i|
               dt + Duration::days(i)
             ).filter(|d|
             d.weekday() == Weekday::Thu
             ).map(|d| 
-            Node {
+            org::Node {
               title : String::from("Technical Staff"),
               todo : None,
               priority : None,
@@ -227,9 +96,9 @@ fn main() {
           nodes.append(&mut nodes3);
           nodes.append(&mut nodes4);
           let month = dt.format("%B %Y Planning").to_string();
-          let month_node = NodeBuilder::new(String::from(month)).add_children(nodes).set_todo("TODO".into()).build();
-          let planning_node = NodeBuilder::new("Planning".to_string()).add_children(vec![month_node]).build();
-          let root = NodeBuilder::new("Group".to_string()).add_children(vec![planning_node]).build();
+          let month_node = org::NodeBuilder::new(String::from(month)).add_children(nodes).set_todo("TODO".into()).build();
+          let planning_node = org::NodeBuilder::new("Planning".to_string()).add_children(vec![month_node]).build();
+          let root = org::NodeBuilder::new("Group".to_string()).add_children(vec![planning_node]).build();
           root.display(1);
         },
         Err(m) => println!("parse failed of '{}': {}",value,m)
