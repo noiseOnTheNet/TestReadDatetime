@@ -1,5 +1,6 @@
 use chrono::prelude::*;
 use chrono::DateTime;
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub enum Text{
@@ -67,6 +68,7 @@ pub struct Node {
   pub todo : Option<String>,
   pub priority : Option<Priority>,
   pub scheduled : Option<DateTime<Utc>>,
+  pub properties : HashMap<String,String>,
   pub children : Vec<Node>,
   pub content : Vec<Text>
 }
@@ -97,6 +99,7 @@ pub struct NodeBuilder {
   title : String,
   todo : Option<String>,
   priority : Option<Priority>,
+  properties : HashMap<String,String>,
   scheduled : Option<DateTime<Utc>>,
   children : Vec<Node>
 }
@@ -106,6 +109,7 @@ impl NodeBuilder {
       title : title,
       todo : None,
       priority : None,
+      properties : HashMap::new(),
       scheduled : None,
       children : Vec::new()
     }
@@ -122,11 +126,18 @@ impl NodeBuilder {
     self.priority = Some(priority);
     self
   }
+
+  pub fn add_property(mut self, key : String, value: String) -> NodeBuilder {
+    self.properties.insert(key, value);
+    self
+  }
+
   pub fn build(self) -> Node{
     Node{
       title : self.title,
       todo : self.todo,
       priority : self.priority,
+      properties : self.properties,
       scheduled : self.scheduled,
       children : self.children,
       content : Vec::new()

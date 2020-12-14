@@ -1,6 +1,7 @@
 use chrono::prelude::*;
 use chrono::Duration;
 use chrono::DateTime;
+use std::collections::HashMap;
 use std::env;
 mod org;
 
@@ -29,6 +30,7 @@ fn main() {
               title : String::from("Daily planning"),
               todo : Some("TODO".into()),
               priority : Some(org::Priority::A),
+              properties : HashMap::new(),
               scheduled : Some(dt + Duration::days(i)),
               children : Vec::new(),
               content : vec![org::Text::PlainText("Plan, Do, Check, Act".into()), 
@@ -45,6 +47,7 @@ fn main() {
               title : String::from("Software Weekly"),
               todo : None,
               priority : None,
+              properties : HashMap::new(),
               scheduled : Some(d),
               children : Vec::new(),
               content : vec![]
@@ -59,6 +62,7 @@ fn main() {
               title : String::from("Software Update"),
               todo : None,
               priority : None,
+              properties : HashMap::new(),
               scheduled : Some(d),
               children : Vec::new(),
               content : vec![]
@@ -73,6 +77,7 @@ fn main() {
               title : String::from("Send Accountability"),
               todo : Some("TODO".into()),
               priority : Some(org::Priority::B),
+              properties : HashMap::new(),
               scheduled : Some(d),
               children : Vec::new(),
               content : vec![]
@@ -87,6 +92,22 @@ fn main() {
               title : String::from("Technical Staff"),
               todo : None,
               priority : None,
+              properties : HashMap::new(),
+              scheduled : Some(d),
+              children : Vec::new(),
+              content : vec![]
+            }).collect();
+          let mut nodes5 : Vec<org::Node> = (0..30).
+            map(|i|
+              dt + Duration::days(i)
+            ).filter(|d|
+            d.weekday() == Weekday::Mon
+            ).map(|d| 
+            org::Node {
+              title : String::from("Web Services"),
+              todo : None,
+              priority : None,
+              properties : HashMap::new(),
               scheduled : Some(d),
               children : Vec::new(),
               content : vec![]
@@ -95,6 +116,7 @@ fn main() {
           nodes.append(&mut nodes2);
           nodes.append(&mut nodes3);
           nodes.append(&mut nodes4);
+          nodes.append(&mut nodes5);
           let month = dt.format("%B %Y Planning").to_string();
           let month_node = org::NodeBuilder::new(String::from(month)).add_children(nodes).set_todo("TODO".into()).build();
           let planning_node = org::NodeBuilder::new("Planning".to_string()).add_children(vec![month_node]).build();
