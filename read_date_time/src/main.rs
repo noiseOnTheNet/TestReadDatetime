@@ -40,33 +40,55 @@ fn main() {
           let mut nodes2 : Vec<org::Node> = (0..30).
             map(|i|
               dt + Duration::days(i)
-            ).filter(|d|
+            ).filter(|d| 
             d.weekday() == Weekday::Tue
-            ).map(|d| 
-            org::Node {
-              title : String::from("Software Weekly"),
-              todo : None,
-              priority : None,
-              properties : HashMap::new(),
-              scheduled : Some(d),
-              children : Vec::new(),
-              content : vec![]
-            }).collect();
+            ).map(|d| {
+              let mut properties = HashMap::new();
+              properties.insert(
+                "LOCATION".to_string(),
+                "zoom".to_string()
+              );
+              properties.insert(
+                "ATTENDEES".to_string(),
+               "agrossi, odonzel, acalloni".to_string()
+              );
+              org::Node {
+                title : String::from("Software Weekly"),
+                todo : None,
+                priority : None,
+                properties : properties,
+                scheduled : Some(d),
+                children : Vec::new(),
+                content : vec![]
+              }
+            }
+            ).collect();
           let mut nodes3 : Vec<org::Node> = (0..30).
             map(|i|
               dt + Duration::days(i)
             ).filter(|d|
             d.weekday() == Weekday::Tue
-            ).map(|d| 
-            org::Node {
-              title : String::from("Software Update"),
-              todo : None,
-              priority : None,
-              properties : HashMap::new(),
-              scheduled : Some(d),
-              children : Vec::new(),
-              content : vec![]
-            }).collect();
+            ).map(|d| {
+              let mut properties = HashMap::new();
+              properties.insert(
+                "LOCATION".to_string(),
+                "zoom".to_string()
+              );
+              properties.insert(
+                "ATTENDEES".to_string(),
+                "snygard, acalloni, odonzel, ksalk, ankushc, anand".to_string()
+              );
+              org::Node {
+                title : String::from("Software Update"),
+                todo : None,
+                priority : None,
+                properties : properties,
+                scheduled : Some(d),
+                children : Vec::new(),
+                content : vec![]
+              }
+            }
+            ).collect();
           let mut nodes1 : Vec<org::Node> = (0..30).
             map(|i|
               dt + Duration::days(i)

@@ -86,6 +86,13 @@ impl Node{
     if let Some(sd)=self.scheduled {
       println!("SCHEDULED: <{}-{:02}-{:02}>",sd.year(),sd.month(),sd.day());
     }
+    if self.properties.len() > 0 {
+      println!("   :PROPERTIES:");
+      for (key, val) in self.properties.iter() {
+        println!("   :{}: {}", key, val);
+      }
+      println!("   :END:");
+    }
     for segment in &self.content{
       &segment.display(0);
       println!("")
