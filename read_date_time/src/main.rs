@@ -32,6 +32,7 @@ fn main() {
               priority : Some(org::Priority::A),
               properties : HashMap::new(),
               scheduled : Some(dt + Duration::days(i)),
+              interval : None,
               children : Vec::new(),
               content : vec![org::Text::PlainText("Plan, Do, Check, Act".into()), 
                              org::Text::ChecklistText(generate_list())
@@ -58,6 +59,7 @@ fn main() {
                 priority : None,
                 properties : properties,
                 scheduled : Some(d),
+                interval : None,
                 children : Vec::new(),
                 content : vec![]
               }
@@ -76,7 +78,7 @@ fn main() {
               );
               properties.insert(
                 "ATTENDEES".to_string(),
-                "snygard, acalloni, odonzel, ksalk, ankushc, anand".to_string()
+                "snygard, acalloni, odonzel, ksalk, ankushc, avaranasi".to_string()
               );
               org::Node {
                 title : String::from("Software Update"),
@@ -84,6 +86,7 @@ fn main() {
                 priority : None,
                 properties : properties,
                 scheduled : Some(d),
+                interval : None,
                 children : Vec::new(),
                 content : vec![]
               }
@@ -101,6 +104,7 @@ fn main() {
               priority : Some(org::Priority::B),
               properties : HashMap::new(),
               scheduled : Some(d),
+              interval : None,
               children : Vec::new(),
               content : vec![]
             }).collect();
@@ -116,6 +120,7 @@ fn main() {
               priority : None,
               properties : HashMap::new(),
               scheduled : Some(d),
+              interval : None,
               children : Vec::new(),
               content : vec![]
             }).collect();
@@ -130,7 +135,8 @@ fn main() {
               todo : None,
               priority : None,
               properties : HashMap::new(),
-              scheduled : Some(d),
+              scheduled : None,
+              interval : Some((d,d)),
               children : Vec::new(),
               content : vec![]
             }).collect();

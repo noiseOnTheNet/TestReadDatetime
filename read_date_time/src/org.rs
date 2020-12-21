@@ -68,6 +68,7 @@ pub struct Node {
   pub todo : Option<String>,
   pub priority : Option<Priority>,
   pub scheduled : Option<DateTime<Utc>>,
+  pub interval : Option<(DateTime<Utc>,DateTime<Utc>)>,
   pub properties : HashMap<String,String>,
   pub children : Vec<Node>,
   pub content : Vec<Text>
@@ -85,6 +86,16 @@ impl Node{
     println!("{}",self.title);
     if let Some(sd)=self.scheduled {
       println!("SCHEDULED: <{}-{:02}-{:02}>",sd.year(),sd.month(),sd.day());
+    }
+    if let Some(id)=self.interval {
+      let (sd,ed) = id;
+      println!(
+        "<{}-{:02}-{:02} {:02}:{:02}>-<{}-{:02}-{:02} {:02}:{:02}>",
+        sd.year(),sd.month(),sd.day(),
+        sd.hour(),sd.minute(),
+        ed.year(),ed.month(),ed.day(),
+        ed.hour(),ed.minute()
+      )
     }
     if self.properties.len() > 0 {
       println!("   :PROPERTIES:");
@@ -108,6 +119,7 @@ pub struct NodeBuilder {
   priority : Option<Priority>,
   properties : HashMap<String,String>,
   scheduled : Option<DateTime<Utc>>,
+  interval : Option<(DateTime<Utc>,DateTime<Utc>)>,
   children : Vec<Node>
 }
 impl NodeBuilder {
@@ -118,6 +130,7 @@ impl NodeBuilder {
       priority : None,
       properties : HashMap::new(),
       scheduled : None,
+      interval : None,
       children : Vec::new()
     }
   }
@@ -139,6 +152,11 @@ impl NodeBuilder {
     self
   }
 
+  pub fn set_interval(mut self, sd : DateTime<Utc>, ed : DateTime<Utc>) -> NodeBuilder{
+    self.interval = Some((sd,ed));
+    self
+  }
+
   pub fn build(self) -> Node{
     Node{
       title : self.title,
@@ -146,9 +164,11 @@ impl NodeBuilder {
       priority : self.priority,
       properties : self.properties,
       scheduled : self.scheduled,
+      interval : self.interval,
       children : self.children,
       content : Vec::new()
     }
   }
+
 }
 
