@@ -7,6 +7,7 @@ pub enum Text{
   PlainText(String),
   ChecklistText(CheckList)
 }
+
 impl Text{
   fn display(& self, level: usize){
     match self{
@@ -15,6 +16,7 @@ impl Text{
     }
   }
 }
+
 #[derive(Debug)]
 pub enum Priority{
   A,
@@ -22,6 +24,7 @@ pub enum Priority{
   C,
   D
 }
+
 impl Priority{
   pub fn display(& self) -> String{
     match self {
@@ -32,10 +35,12 @@ impl Priority{
     }
   }
 }
+
 #[derive(Debug)]
 pub struct CheckList {
   pub items : Vec<ListItem>
 }
+
 impl CheckList{
   pub fn display(& self, level : usize){
     for item in &self.items {
@@ -48,12 +53,14 @@ impl CheckList{
 pub struct ListItem {
   pub content : Vec<Text>
 }
+
 impl ListItem{
   pub fn from_text(content : Text) -> ListItem{
     ListItem{
       content : vec![content]
     }
   }
+
   pub fn display(& self, level : usize){
     let indent = std::iter::repeat("  ").take(level).collect::<String>();
     print!("\n{}- [ ] ",indent);
@@ -62,6 +69,7 @@ impl ListItem{
     }
   }
 }
+
 #[derive(Debug)]
 pub struct Node {
   pub title : String,
@@ -73,6 +81,7 @@ pub struct Node {
   pub children : Vec<Node>,
   pub content : Vec<Text>
 }
+
 impl Node{
   pub fn display (self : & Node, level: usize){
     let stars = std::iter::repeat("*").take(level).collect::<String>();
@@ -85,16 +94,16 @@ impl Node{
     }
     println!("{}",self.title);
     if let Some(sd)=self.scheduled {
-      println!("SCHEDULED: <{}-{:02}-{:02}>",sd.year(),sd.month(),sd.day());
+      println!("SCHEDULED: <{}-{:02}-{:02} {}>",sd.year(),sd.month(),sd.day(), sd.weekday());
     }
     if let Some(id)=self.interval {
       let (sd,ed) = id;
       println!(
-        "<{}-{:02}-{:02} {:02}:{:02}>-<{}-{:02}-{:02} {:02}:{:02}>",
+        "<{}-{:02}-{:02} {} {:02}:{:02}>-<{}-{:02}-{:02} {} {:02}:{:02}>",
         sd.year(),sd.month(),sd.day(),
-        sd.hour(),sd.minute(),
+        sd.weekday(),sd.hour(),sd.minute(),
         ed.year(),ed.month(),ed.day(),
-        ed.hour(),ed.minute()
+        ed.weekday(),ed.hour(),ed.minute()
       )
     }
     if self.properties.len() > 0 {
@@ -113,6 +122,7 @@ impl Node{
     }  
   }
 }
+
 pub struct NodeBuilder {
   title : String,
   todo : Option<String>,
@@ -122,6 +132,7 @@ pub struct NodeBuilder {
   interval : Option<(DateTime<Utc>,DateTime<Utc>)>,
   children : Vec<Node>
 }
+
 impl NodeBuilder {
   pub fn new(title : String) -> NodeBuilder{
     NodeBuilder{
@@ -134,6 +145,7 @@ impl NodeBuilder {
       children : Vec::new()
     }
   }
+  
   pub fn add_children(mut self  , children : Vec<Node>)-> NodeBuilder{
     self.children = children;
     self
@@ -169,6 +181,4 @@ impl NodeBuilder {
       content : Vec::new()
     }
   }
-
 }
-
