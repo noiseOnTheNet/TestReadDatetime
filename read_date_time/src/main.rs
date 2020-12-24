@@ -58,8 +58,11 @@ fn main() {
                 todo : None,
                 priority : None,
                 properties : properties,
-                scheduled : Some(d),
-                interval : None,
+                scheduled : None,
+                interval : Some((
+                  d + Duration::hours(14) + Duration::minutes(30),
+                  d + Duration::hours(15) + Duration::minutes(30)
+                )),
                 children : Vec::new(),
                 content : vec![]
               }
@@ -85,8 +88,11 @@ fn main() {
                 todo : None,
                 priority : None,
                 properties : properties,
-                scheduled : Some(d),
-                interval : None,
+                scheduled : None,
+                interval : Some((
+                  d + Duration::hours(15) + Duration::minutes(30),
+                  d + Duration::hours(16) + Duration::minutes(30)
+                )),
                 children : Vec::new(),
                 content : vec![]
               }
@@ -113,32 +119,58 @@ fn main() {
               dt + Duration::days(i)
             ).filter(|d|
             d.weekday() == Weekday::Thu
-            ).map(|d| 
-            org::Node {
-              title : String::from("Technical Staff"),
-              todo : None,
-              priority : None,
-              properties : HashMap::new(),
-              scheduled : Some(d),
-              interval : None,
-              children : Vec::new(),
-              content : vec![]
+            ).map(|d| {
+              let mut properties = HashMap::new();
+              properties.insert(
+                "LOCATION".to_string(),
+                "zoom".to_string()
+              );
+              properties.insert(
+                "ATTENDEES".to_string(),
+               "agrossi, lvendram, abenvenu, aghetti, friva".to_string()
+              );
+              org::Node {
+                title : String::from("Technical Staff"),
+                todo : None,
+                priority : None,
+                properties : properties,
+                scheduled : None,
+                interval : Some((
+                  d + Duration::hours(11),
+                  d + Duration::hours(12) + Duration::minutes(30)
+                )),
+                children : Vec::new(),
+                content : vec![]
+              }
             }).collect();
           let mut nodes5 : Vec<org::Node> = (0..30).
             map(|i|
               dt + Duration::days(i)
             ).filter(|d|
             d.weekday() == Weekday::Mon
-            ).map(|d| 
-            org::Node {
-              title : String::from("Web Services"),
-              todo : None,
-              priority : None,
-              properties : HashMap::new(),
-              scheduled : None,
-              interval : Some((d,d)),
-              children : Vec::new(),
-              content : vec![]
+            ).map(|d| { 
+              let mut properties = HashMap::new();
+              properties.insert(
+                "LOCATION".to_string(),
+                "zoom".to_string()
+              );
+              properties.insert(
+                "ATTENDEES".to_string(),
+                "snygard, avaranasi".to_string()
+              );
+              org::Node {
+                title : String::from("Web Services"),
+                todo : None,
+                priority : None,
+                properties : properties,
+                scheduled : None,
+                interval : Some((
+                  d + Duration::hours(16),
+                  d + Duration::hours(17)
+                )),
+                children : Vec::new(),
+                content : vec![]
+              }
             }).collect();
           nodes.append(&mut nodes1);
           nodes.append(&mut nodes2);
