@@ -71,7 +71,7 @@ impl ListItem{
 }
 
 #[derive(Debug)]
-pub struct Node {
+pub struct Node{
   pub title : String,
   pub todo : Option<String>,
   pub priority : Option<Priority>,
@@ -134,9 +134,9 @@ pub struct NodeBuilder {
 }
 
 impl NodeBuilder {
-  pub fn new(title : String) -> NodeBuilder{
+  pub fn new<S:ToString>(title : S) -> NodeBuilder{
     NodeBuilder{
-      title : title,
+      title : title.to_string(),
       todo : None,
       priority : None,
       properties : HashMap::new(),
@@ -159,8 +159,8 @@ impl NodeBuilder {
     self
   }
 
-  pub fn add_property(mut self, key : String, value: String) -> NodeBuilder {
-    self.properties.insert(key, value);
+  pub fn add_property<S:ToString>(mut self, key : S, value: S) -> NodeBuilder {
+    self.properties.insert(key.to_string(), value.to_string());
     self
   }
 
