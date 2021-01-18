@@ -164,7 +164,22 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
     org::NodeBuilder::new(dt.format("Web Calculators Maintenance %B")).build(),
     org::NodeBuilder::new(dt.format("Web Calculators Meetings %B")).build()
   ]).build();
-  let root = org::NodeBuilder::new("Data Analysis").add_children(vec![arda, webcalc]).build();
+  let gdw = org::NodeBuilder::new(dt.format("GDW %Y %B"))
+  .add_children(vec![
+    org::NodeBuilder::new(dt.format("GDW Maintenance %B")).build(),
+    org::NodeBuilder::new(dt.format("GDW Meetings %B")).build()
+  ]).build();
+  let root = org::NodeBuilder::new("Data Analysis").add_children(vec![arda, webcalc, gdw]).build();
+  root
+}
+
+fn lab_infrastr(dt:DateTime<Utc>) -> org::Node{
+  let masterbook = org::NodeBuilder::new(dt.format("Masterbook %Y %B"))
+  .add_children(vec![
+    org::NodeBuilder::new(dt.format("Matesterbook Maintenance %B")).build(),
+    org::NodeBuilder::new(dt.format("Matesterbook Meetings %B")).build()
+  ]).build();
+  let root = org::NodeBuilder::new("Infrastructure").add_children(vec![masterbook]).build();
   root
 }
 
@@ -180,6 +195,8 @@ fn main() {
           plan_root.display(1);
           let da_root = data_analysis(dt);
           da_root.display(1);
+          let if_root = lab_infrastr(dt);
+          if_root.display(1);
         },
         Err(m) => println!("parse failed of '{}': {}",value,m)
       }
