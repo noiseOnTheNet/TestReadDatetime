@@ -147,7 +147,7 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
           nodes.append(&mut nodes6);
           nodes.append(&mut nodes7);
           let month = dt.format("%Y %B Planning").to_string();
-          let month_node = org::NodeBuilder::new(month).add_children(nodes).set_todo("TODO".into()).build();
+          let month_node = org::NodeBuilder::new(month).add_children(nodes).set_todo("TODO").build();
           let planning_node = org::NodeBuilder::new("Planning").add_children(vec![month_node]).build();
           let root = org::NodeBuilder::new("Group").add_children(vec![planning_node]).build();
           root
@@ -155,19 +155,30 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
 
 fn data_analysis(dt:DateTime<Utc>) -> org::Node{
   let arda = org::NodeBuilder::new(dt.format("Arda %Y %B"))
+  .set_todo("NEXT")
   .add_children(vec![
     org::NodeBuilder::new(dt.format("Arda Maintenance %B")).build(),
     org::NodeBuilder::new(dt.format("Arda Meetings %B")).build()
   ]).build();
   let webcalc = org::NodeBuilder::new(dt.format("Web Calculators %Y %B"))
+  .set_todo("NEXT")
   .add_children(vec![
-    org::NodeBuilder::new(dt.format("Web Calculators Maintenance %B")).build(),
-    org::NodeBuilder::new(dt.format("Web Calculators Meetings %B")).build()
+    org::NodeBuilder::new(dt.format("Web Calculators Maintenance %B"))
+    .set_todo("NEXT")
+    .build(),
+    org::NodeBuilder::new(dt.format("Web Calculators Meetings %B"))
+    .set_todo("NEXT")
+    .build()
   ]).build();
   let gdw = org::NodeBuilder::new(dt.format("GDW %Y %B"))
+  .set_todo("NEXT")
   .add_children(vec![
-    org::NodeBuilder::new(dt.format("GDW Maintenance %B")).build(),
-    org::NodeBuilder::new(dt.format("GDW Meetings %B")).build()
+    org::NodeBuilder::new(dt.format("GDW Maintenance %B"))
+    .set_todo("NEXT")
+    .build(),
+    org::NodeBuilder::new(dt.format("GDW Meetings %B"))
+    .set_todo("NEXT")
+    .build()
   ]).build();
   let root = org::NodeBuilder::new("Data Analysis").add_children(vec![arda, webcalc, gdw]).build();
   root
@@ -175,11 +186,31 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
 
 fn lab_infrastr(dt:DateTime<Utc>) -> org::Node{
   let masterbook = org::NodeBuilder::new(dt.format("Masterbook %Y %B"))
+  .set_todo("NEXT")
   .add_children(vec![
-    org::NodeBuilder::new(dt.format("Matesterbook Maintenance %B")).build(),
-    org::NodeBuilder::new(dt.format("Matesterbook Meetings %B")).build()
+    org::NodeBuilder::new(dt.format("Matesterbook Maintenance %B"))
+    .set_todo("NEXT")
+    .build(),
+    org::NodeBuilder::new(dt.format("Matesterbook Meetings %B"))
+    .set_todo("NEXT")
+    .build()
   ]).build();
   let root = org::NodeBuilder::new("Infrastructure").add_children(vec![masterbook]).build();
+  root
+}
+
+fn division_support(dt:DateTime<Utc>) -> org::Node{
+  let patm = org::NodeBuilder::new(dt.format("PATM %Y %B"))
+  .set_todo("NEXT")
+  .add_children(vec![
+    org::NodeBuilder::new(dt.format("PATM Maintenance %B"))
+    .set_todo("NEXT")
+    .build(),
+    org::NodeBuilder::new(dt.format("PATM Meetings %B"))
+    .set_todo("NEXT")
+    .build()
+  ]).build();
+  let root = org::NodeBuilder::new("Division").add_children(vec![patm]).build();
   root
 }
 
@@ -197,6 +228,8 @@ fn main() {
           da_root.display(1);
           let if_root = lab_infrastr(dt);
           if_root.display(1);
+          let dv_supp = division_support(dt);
+          dv_supp.display(1);
         },
         Err(m) => println!("parse failed of '{}': {}",value,m)
       }

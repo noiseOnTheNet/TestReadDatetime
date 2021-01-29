@@ -150,8 +150,8 @@ impl NodeBuilder {
     self.children = children;
     self
   }
-  pub fn set_todo(mut self, todo : String) -> NodeBuilder {
-    self.todo = Some(todo);
+  pub fn set_todo<S:ToString>(mut self, todo : S) -> NodeBuilder {
+    self.todo = Some(todo.to_string());
     self
   }
   pub fn set_priority(mut self, priority : Priority) -> NodeBuilder {
