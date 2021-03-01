@@ -154,13 +154,13 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
 }
 
 fn data_analysis(dt:DateTime<Utc>) -> org::Node{
-  let arda = org::NodeBuilder::new(dt.format("Arda %Y %B"))
+  let arda = org::NodeBuilder::new(dt.format("Arda %B %Y"))
   .set_todo("NEXT")
   .add_children(vec![
     org::NodeBuilder::new(dt.format("Arda Maintenance %B")).build(),
     org::NodeBuilder::new(dt.format("Arda Meetings %B")).build()
   ]).build();
-  let webcalc = org::NodeBuilder::new(dt.format("Web Calculators %Y %B"))
+  let webcalc = org::NodeBuilder::new(dt.format("WebCalc %B %Y"))
   .set_todo("NEXT")
   .add_children(vec![
     org::NodeBuilder::new(dt.format("Web Calculators Maintenance %B"))
@@ -170,7 +170,7 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
     .set_todo("NEXT")
     .build()
   ]).build();
-  let gdw = org::NodeBuilder::new(dt.format("GDW %Y %B"))
+  let gdw = org::NodeBuilder::new(dt.format("GDW %B %Y"))
   .set_todo("NEXT")
   .add_children(vec![
     org::NodeBuilder::new(dt.format("GDW Maintenance %B"))
@@ -185,7 +185,7 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
 }
 
 fn lab_infrastr(dt:DateTime<Utc>) -> org::Node{
-  let masterbook = org::NodeBuilder::new(dt.format("Masterbook %Y %B"))
+  let masterbook = org::NodeBuilder::new(dt.format("Masterbook %B %Y"))
   .set_todo("NEXT")
   .add_children(vec![
     org::NodeBuilder::new(dt.format("Matesterbook Maintenance %B"))
@@ -200,7 +200,7 @@ fn lab_infrastr(dt:DateTime<Utc>) -> org::Node{
 }
 
 fn division_support(dt:DateTime<Utc>) -> org::Node{
-  let patm = org::NodeBuilder::new(dt.format("PATM %Y %B"))
+  let patm = org::NodeBuilder::new(dt.format("PATM %B %Y"))
   .set_todo("NEXT")
   .add_children(vec![
     org::NodeBuilder::new(dt.format("PATM Maintenance %B"))
@@ -210,7 +210,7 @@ fn division_support(dt:DateTime<Utc>) -> org::Node{
     .set_todo("NEXT")
     .build()
   ]).build();
-  let root = org::NodeBuilder::new("Division").add_children(vec![patm]).build();
+  let root = org::NodeBuilder::new("TPG").add_children(vec![patm]).build();
   root
 }
 
