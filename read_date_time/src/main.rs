@@ -214,6 +214,58 @@ fn division_support(dt:DateTime<Utc>) -> org::Node{
   root
 }
 
+fn personal(dt:DateTime<Utc>) -> org::Node{
+  let mut alice1 : Vec<org::Node> = (0..30).
+      map(|i|
+        dt + Duration::days(i)
+      ).filter(|d|
+        d.weekday() == Weekday::Thu
+      ).map(|d| { 
+        org::NodeBuilder::new("Fisica")
+        .add_property("ATTENDEES","Alice Filisetti; Andrea Cenati")
+        .add_property("LOCATION","zoom")
+        .set_interval(
+          d + Duration::hours(20) + Duration::minutes(30),
+          d + Duration::hours(21) + Duration::minutes(30)
+        )
+        .build()
+      }).collect();
+  let mut alice2 : Vec<org::Node> = (0..30).
+      map(|i|
+        dt + Duration::days(i)
+      ).filter(|d|
+        d.weekday() == Weekday::Sat
+      ).map(|d| { 
+        org::NodeBuilder::new("Fisica")
+        .add_property("ATTENDEES","Alice Filisetti; Andrea Cenati")
+        .add_property("LOCATION","zoom")
+        .set_interval(
+          d + Duration::hours(16),
+          d + Duration::hours(18)
+        )
+        .build()
+      }).collect();
+  let mut eleonora : Vec<org::Node> = (0..30).
+      map(|i|
+        dt + Duration::days(i)
+      ).filter(|d|
+        d.weekday() == Weekday::Sat
+      ).map(|d| { 
+        org::NodeBuilder::new("Lezione")
+        .add_property("ATTENDEES","Eleonora Tomezzoli")
+        .add_property("LOCATION","zoom")
+        .set_interval(
+          d + Duration::hours(10),
+          d + Duration::hours(12)
+        )
+        .build()
+      }).collect();
+      alice1.append(&mut alice2);
+      alice1.append(&mut eleonora);
+  let root = org::NodeBuilder::new(dt.format("Lezioni %B %Y")).add_children(alice1).build();
+  root
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     println!("received args: {:?}", args);
@@ -230,6 +282,8 @@ fn main() {
           if_root.display(1);
           let dv_supp = division_support(dt);
           dv_supp.display(1);
+          let not_work = personal(dt);
+          not_work.display(1);
         },
         Err(m) => println!("parse failed of '{}': {}",value,m)
       }
