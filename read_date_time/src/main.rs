@@ -139,6 +139,12 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
               )
               .build()
             }).collect();
+          let mut nodes8 = vec! [
+            org::NodeBuilder::new("Insert time leave").
+            set_schedule(dt).
+            set_priority(org::Priority::C).
+            build()
+          ];
           nodes.append(&mut nodes1);
           nodes.append(&mut nodes2);
           nodes.append(&mut nodes3);
@@ -146,6 +152,7 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
           nodes.append(&mut nodes5);
           nodes.append(&mut nodes6);
           nodes.append(&mut nodes7);
+          nodes.append(&mut nodes8);
           let month = dt.format("%Y %B Planning").to_string();
           let month_node = org::NodeBuilder::new(month).add_children(nodes).set_todo("TODO").build();
           let planning_node = org::NodeBuilder::new("Planning").add_children(vec![month_node]).build();
@@ -260,8 +267,24 @@ fn personal(dt:DateTime<Utc>) -> org::Node{
         )
         .build()
       }).collect();
+  let mut anna : Vec<org::Node> = (0..30).
+      map(|i|
+        dt + Duration::days(i)
+      ).filter(|d|
+        d.weekday() == Weekday::Sat
+      ).map(|d| { 
+        org::NodeBuilder::new("Lezione")
+        .add_property("ATTENDEES","Anna Vezzoli")
+        .add_property("LOCATION","casa")
+        .set_interval(
+          d + Duration::hours(20),
+          d + Duration::hours(22)
+        )
+        .build()
+      }).collect();
       alice1.append(&mut alice2);
       alice1.append(&mut eleonora);
+      alice1.append(&mut anna);
   let root = org::NodeBuilder::new(dt.format("Lezioni %B %Y")).add_children(alice1).build();
   root
 }

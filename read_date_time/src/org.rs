@@ -158,6 +158,10 @@ impl NodeBuilder {
     self.priority = Some(priority);
     self
   }
+  pub fn set_schedule(mut self, dt : DateTime<Utc>) -> NodeBuilder {
+    self.scheduled = Some(dt);
+    self
+  }
 
   pub fn add_property<S:ToString>(mut self, key : S, value: S) -> NodeBuilder {
     self.properties.insert(key.to_string(), value.to_string());
