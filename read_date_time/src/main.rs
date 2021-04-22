@@ -139,7 +139,39 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
               )
               .build()
             }).collect();
-          let mut nodes8 = vec! [
+            let mut nodes8 : Vec<org::Node> = (0..30).
+            map(|i|
+              dt + Duration::days(i)
+            ).filter(|d|
+            d.weekday() == Weekday::Thu &&
+            d.iso_week().week() % 2 == 0
+            ).map(|d| { 
+              org::NodeBuilder::new("SW Reliability")
+              .add_property("ATTENDEES","mvezzoli; dventric; ngalbiat; rbottini; lvendram; agrossi; acalloni; svigano; lbortesi; trossi")
+              .add_property("LOCATION","zoom")
+              .set_interval(
+                d + Duration::hours(10),
+                d + Duration::hours(11)
+              )
+              .build()
+            }).collect();
+            let mut nodes9 : Vec<org::Node> = (0..30).
+            map(|i|
+              dt + Duration::days(i)
+            ).filter(|d|
+            d.weekday() == Weekday::Wed &&
+            d.iso_week().week() % 2 == 0
+            ).map(|d| { 
+              org::NodeBuilder::new("TD/IT Review")
+              .add_property("ATTENDEES","pmancini; friva; agrossi; mvezzoli; ppezzimenti;dspiniel; aattina; bbonini; pfilini")
+              .add_property("LOCATION","zoom")
+              .set_interval(
+                d + Duration::hours(10),
+                d + Duration::hours(11)
+              )
+              .build()
+            }).collect();
+          let mut nodes10 = vec! [
             org::NodeBuilder::new("Insert time leave").
             set_schedule(dt).
             set_priority(org::Priority::C).
@@ -153,6 +185,8 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
           nodes.append(&mut nodes6);
           nodes.append(&mut nodes7);
           nodes.append(&mut nodes8);
+          nodes.append(&mut nodes9);
+          nodes.append(&mut nodes10);
           let month = dt.format("%Y %B Planning").to_string();
           let month_node = org::NodeBuilder::new(month).add_children(nodes).set_todo("TODO").build();
           let planning_node = org::NodeBuilder::new("Planning").add_children(vec![month_node]).build();
