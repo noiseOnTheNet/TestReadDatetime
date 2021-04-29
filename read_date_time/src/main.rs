@@ -189,7 +189,9 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
           nodes.append(&mut nodes10);
           let month = dt.format("%Y %B Planning").to_string();
           let month_node = org::NodeBuilder::new(month).add_children(nodes).set_todo("TODO").build();
-          let planning_node = org::NodeBuilder::new("Planning").add_children(vec![month_node]).build();
+          let planning_node = org::NodeBuilder::new("Planning").add_children(vec![month_node])
+          .add_property("CATEGORY","Planning")
+          .build();
           let root = org::NodeBuilder::new("Group").add_children(vec![planning_node]).build();
           root
 }
@@ -200,7 +202,9 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
   .add_children(vec![
     org::NodeBuilder::new(dt.format("Arda Maintenance %B")).build(),
     org::NodeBuilder::new(dt.format("Arda Meetings %B")).build()
-  ]).build();
+  ])
+  .add_property("CATEGORY","Arda")
+  .build();
   let webcalc = org::NodeBuilder::new(dt.format("WebCalc %B %Y"))
   .set_todo("NEXT")
   .add_children(vec![
@@ -210,7 +214,9 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
     org::NodeBuilder::new(dt.format("Web Calculators Meetings %B"))
     .set_todo("NEXT")
     .build()
-  ]).build();
+  ])
+  .add_property("CATEGORY","WebCalc")
+  .build();
   let gdw = org::NodeBuilder::new(dt.format("GDW %B %Y"))
   .set_todo("NEXT")
   .add_children(vec![
@@ -220,7 +226,9 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
     org::NodeBuilder::new(dt.format("GDW Meetings %B"))
     .set_todo("NEXT")
     .build()
-  ]).build();
+  ])
+  .add_property("CATEGORY","GDW")
+  .build();
   let root = org::NodeBuilder::new("Data Analysis").add_children(vec![arda, webcalc, gdw]).build();
   root
 }
@@ -235,7 +243,9 @@ fn lab_infrastr(dt:DateTime<Utc>) -> org::Node{
     org::NodeBuilder::new(dt.format("Matesterbook Meetings %B"))
     .set_todo("NEXT")
     .build()
-  ]).build();
+  ])
+  .add_property("CATEGORY","MB2")
+  .build();
   let root = org::NodeBuilder::new("Infrastructure").add_children(vec![masterbook]).build();
   root
 }
@@ -250,7 +260,9 @@ fn division_support(dt:DateTime<Utc>) -> org::Node{
     org::NodeBuilder::new(dt.format("PATM Meetings %B"))
     .set_todo("NEXT")
     .build()
-  ]).build();
+  ])
+  .add_property("CATEGORY","PATM")
+  .build();
   let root = org::NodeBuilder::new("TPG").add_children(vec![patm]).build();
   root
 }
@@ -319,7 +331,9 @@ fn personal(dt:DateTime<Utc>) -> org::Node{
       alice1.append(&mut alice2);
       alice1.append(&mut eleonora);
       alice1.append(&mut anna);
-  let root = org::NodeBuilder::new(dt.format("Lezioni %B %Y")).add_children(alice1).build();
+  let root = org::NodeBuilder::new(dt.format("Lezioni %B %Y")).add_children(alice1)
+  .add_property("CATEGORY","Lezioni")
+  .build();
   root
 }
 
