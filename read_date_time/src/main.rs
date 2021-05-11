@@ -246,7 +246,19 @@ fn lab_infrastr(dt:DateTime<Utc>) -> org::Node{
   ])
   .add_property("CATEGORY","MB2")
   .build();
-  let root = org::NodeBuilder::new("Infrastructure").add_children(vec![masterbook]).build();
+  let pycron = org::NodeBuilder::new(dt.format("Pycron %B %Y"))
+  .set_todo("NEXT")
+  .add_children(vec![
+    org::NodeBuilder::new(dt.format("Pycron Maintenance %B"))
+    .set_todo("NEXT")
+    .build(),
+    org::NodeBuilder::new(dt.format("Pycron Meetings %B"))
+    .set_todo("NEXT")
+    .build()
+  ])
+  .add_property("CATEGORY","PYCRON")
+  .build();
+  let root = org::NodeBuilder::new("Infrastructure").add_children(vec![masterbook, pycron]).build();
   root
 }
 
