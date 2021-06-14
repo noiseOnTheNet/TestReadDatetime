@@ -229,7 +229,20 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
   ])
   .add_property("CATEGORY","GDW")
   .build();
-  let root = org::NodeBuilder::new("Data Analysis").add_children(vec![arda, webcalc, gdw]).build();
+  let rtn = org::NodeBuilder::new(dt.format("RTN ML %B %Y"))
+  .set_todo("NEXT")
+  .add_children(vec![
+    org::NodeBuilder::new(dt.format("RTN ML Maintenance %B"))
+    .set_todo("NEXT")
+    .build(),
+    org::NodeBuilder::new(dt.format("RTN ML Meetings %B"))
+    .set_todo("NEXT")
+    .build()
+  ])
+  .add_property("CATEGORY","RTN")
+  .build();
+    let root = org::NodeBuilder::new("Data Analysis")
+        .add_children(vec![arda, webcalc, gdw, rtn]).build();
   root
 }
 
@@ -258,7 +271,9 @@ fn lab_infrastr(dt:DateTime<Utc>) -> org::Node{
   ])
   .add_property("CATEGORY","PYCRON")
   .build();
-  let root = org::NodeBuilder::new("Infrastructure").add_children(vec![masterbook, pycron]).build();
+    let root = org::NodeBuilder::new("Infrastructure")
+        .add_children(vec![masterbook, pycron])
+        .build();
   root
 }
 
