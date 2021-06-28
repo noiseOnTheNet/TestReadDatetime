@@ -143,7 +143,7 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
             map(|i|
               dt + Duration::days(i)
             ).filter(|d|
-            d.weekday() == Weekday::Thu &&
+            d.weekday() == Weekday::Wed &&
             d.iso_week().week() % 2 == 0
             ).map(|d| { 
               org::NodeBuilder::new("SW Reliability")
