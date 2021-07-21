@@ -217,15 +217,31 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
   ])
   .add_property("CATEGORY","WebCalc")
   .build();
+    let gdw_meetings : Vec<org::Node> = (0..30).
+        map(|i|
+            dt + Duration::days(i)
+        ).filter(|d|
+                 d.weekday() == Weekday::Fri
+        ).map(|d| { 
+            org::NodeBuilder::new("GDW Working")
+                .add_property("ATTENDEES","ksalk; deeabbott; stamboli; ijdembi; mvezzoli; ccardon; avaranasi")
+                .add_property("LOCATION","zoom")
+                .set_interval(
+                    d + Duration::hours(17),
+                    d + Duration::hours(18)
+                )
+                .build()
+        }).collect();
   let gdw = org::NodeBuilder::new(dt.format("GDW %B %Y [%%]"))
   .set_todo("NEXT")
   .add_children(vec![
     org::NodeBuilder::new(dt.format("GDW Maintenance %B [/]"))
-    .set_todo("NEXT")
-    .build(),
+          .set_todo("NEXT")
+          .build(),
     org::NodeBuilder::new(dt.format("GDW Meetings %B [/]"))
-    .set_todo("NEXT")
-    .build()
+          .set_todo("NEXT")
+          .add_children(gdw_meetings)
+          .build()
   ])
   .add_property("CATEGORY","GDW")
   .build();
