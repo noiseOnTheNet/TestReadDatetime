@@ -109,6 +109,21 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
               )
               .build()
             }).collect();
+          let mut nodes6_bis : Vec<org::Node> = (0..30).
+            map(|i|
+              dt + Duration::days(i)
+            ).filter(|d|
+            d.weekday() == Weekday::Thu
+            ).map(|d| { 
+              org::NodeBuilder::new("GDW Cruncher and Reporter")
+              .add_property("ATTENDEES","snygard; mvezzoli; avaranasi")
+              .add_property("LOCATION","zoom")
+              .set_interval(
+                d + Duration::hours(16),
+                d + Duration::hours(17)
+              )
+              .build()
+            }).collect();
           let mut nodes6 : Vec<org::Node> = (0..30).
             map(|i|
               dt + Duration::days(i)
@@ -183,6 +198,7 @@ fn planning(dt:DateTime<Utc>) -> org::Node{
           nodes.append(&mut nodes4);
           nodes.append(&mut nodes5);
           nodes.append(&mut nodes6);
+          nodes.append(&mut nodes6_bis);
           nodes.append(&mut nodes7);
           nodes.append(&mut nodes8);
           nodes.append(&mut nodes9);
