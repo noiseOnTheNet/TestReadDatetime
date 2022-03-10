@@ -1,5 +1,6 @@
 use chrono::prelude::*;
 use chrono::DateTime;
+use chrono::Duration;
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -173,6 +174,11 @@ impl NodeBuilder {
     self
   }
 
+    pub fn set_date_hours(mut self, sd : DateTime<Utc>, sh : u8, eh : u8) -> NodeBuilder{
+        self.interval = Some((sd + Duration::hours(sh.into()), sd + Duration::hours(eh.into())));
+        self
+    }
+    
   pub fn build(self) -> Node{
     Node{
       title : self.title,
@@ -185,4 +191,12 @@ impl NodeBuilder {
       content : Vec::new()
     }
   }
+}
+
+pub fn create_meeting<S:ToString>(title : S, date : DateTime<Utc>, start_hour : u8, end_hour : u8, attendees : S, location : S) -> Node{
+    NodeBuilder::new(title)
+        .add_property("ATTENDEES".to_owned(),attendees.to_string())
+        .add_property("LOCATION".to_owned(),location.to_string())
+        .set_date_hours(date, start_hour, end_hour)
+        .build()
 }
