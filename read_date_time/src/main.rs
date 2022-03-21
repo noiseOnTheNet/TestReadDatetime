@@ -164,6 +164,16 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
         ])
         .add_property("CATEGORY","WebCalc")
         .build();
+    let data_science = org::NodeBuilder::new(dt.format("Data Science %B %Y [%%]"))
+        .set_todo("Next")
+        .add_children(vec![
+            org::NodeBuilder::new(dt.format("Data Science Development %B [/]"))
+                .set_todo("NEXT").build(),
+            org::NodeBuilder::new(dt.format("Data Science Meetings %B [/]"))
+                .set_todo("NEXT").build()
+        ])
+        .add_property("CATEGOTY","DS")
+        .build();
     let mut gdw_meetings : Vec<org::Node> = (0..30).
         map(|i|
             dt + Duration::days(i)
@@ -186,12 +196,9 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
         map(|i|
             dt + Duration::days(i)
         ).filter(|d|
-                 d.weekday() == Weekday::Mon
-        ).flat_map(|d| {
-            vec![
-                org::create_meeting("InlineCruncher and AutoPlotter", d, 17, 18, "Stuart Nygard (snygard);Stuart Nygard (snygard);Yosuke Irie (yirie);Karine Florent (kaflorent);Giovanni Ferrari (giovanniferr);Dave Peterson (dmpeterson);Christopher Cardon (ccardon);Marco Paolo Valerio Vezzoli (mvezzoli);Anand Varanasi (avaranasi);Phil Stich (pstich);", "zoom"),
-                org::create_meeting("Auto Plotter Working Meeting", d, 9, 10,"mvezzoli; avaranasi", "zoom")
-            ].into_iter()
+                 d.weekday() == Weekday::Wed
+        ).map(|d| {
+            org::create_meeting("Auto Plotter Working Meeting", d, 9, 10,"mvezzoli; avaranasi", "zoom")
         }).collect();
     let mut gdw_meetings3 : Vec<org::Node> = (0..30).
         map(|i|
@@ -220,7 +227,7 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
         .add_property("CATEGORY","GDW")
         .build();
     let root = org::NodeBuilder::new("Data Analysis")
-        .add_children(vec![arda, webcalc, gdw]).build();
+        .add_children(vec![arda, data_science, webcalc, gdw]).build();
     root
 }
 
