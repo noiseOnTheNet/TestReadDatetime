@@ -145,7 +145,7 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
     let arda = org::NodeBuilder::new(dt.format("Arda %B %Y [%%]"))
         .set_todo("NEXT")
         .add_children(vec![
-            org::NodeBuilder::new(dt.format("Arda Maintenance %B [/]")).set_todo("NEXT")
+            org::NodeBuilder::new(dt.format("Arda Development %B [/]")).set_todo("NEXT")
                 .build(),
             org::NodeBuilder::new(dt.format("Arda Meetings %B [/]")).set_todo("NEXT")
                 .build()
@@ -155,7 +155,7 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
     let webcalc = org::NodeBuilder::new(dt.format("WebCalc %B %Y [%%]"))
         .set_todo("NEXT")
         .add_children(vec![
-            org::NodeBuilder::new(dt.format("Web Calculators Maintenance %B [/]"))
+            org::NodeBuilder::new(dt.format("Web Calculators Development %B [/]"))
                 .set_todo("NEXT")
                 .build(),
             org::NodeBuilder::new(dt.format("Web Calculators Meetings %B [/]"))
@@ -165,7 +165,7 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
         .add_property("CATEGORY","WebCalc")
         .build();
     let data_science = org::NodeBuilder::new(dt.format("Data Science %B %Y [%%]"))
-        .set_todo("Next")
+        .set_todo("NEXT")
         .add_children(vec![
             org::NodeBuilder::new(dt.format("Data Science Development %B [/]"))
                 .set_todo("NEXT").build(),
@@ -216,7 +216,7 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
     let gdw = org::NodeBuilder::new(dt.format("GDW %B %Y [%%]"))
         .set_todo("NEXT")
         .add_children(vec![
-            org::NodeBuilder::new(dt.format("GDW Maintenance %B [/]"))
+            org::NodeBuilder::new(dt.format("GDW Development %B [/]"))
                 .set_todo("NEXT")
                 .build(),
             org::NodeBuilder::new(dt.format("GDW Meetings %B [/]"))
@@ -235,7 +235,7 @@ fn lab_infrastr(dt:DateTime<Utc>) -> org::Node{
     let gel = org::NodeBuilder::new(dt.format("GEL %B %Y [%%]"))
         .set_todo("NEXT")
         .add_children(vec![
-            org::NodeBuilder::new(dt.format("GEL Maintenance %B [/]"))
+            org::NodeBuilder::new(dt.format("GEL Development %B [/]"))
                 .set_todo("NEXT")
                 .build(),
             org::NodeBuilder::new(dt.format("GEL Meetings %B [/]"))
@@ -247,7 +247,7 @@ fn lab_infrastr(dt:DateTime<Utc>) -> org::Node{
     let masterbook = org::NodeBuilder::new(dt.format("Masterbook %B %Y [%%]"))
         .set_todo("NEXT")
         .add_children(vec![
-            org::NodeBuilder::new(dt.format("Masterbook Maintenance %B [/]"))
+            org::NodeBuilder::new(dt.format("Masterbook Development %B [/]"))
                 .set_todo("NEXT")
                 .build(),
             org::NodeBuilder::new(dt.format("Masterbook Meetings %B [/]"))
@@ -259,7 +259,7 @@ fn lab_infrastr(dt:DateTime<Utc>) -> org::Node{
     let pycron = org::NodeBuilder::new(dt.format("Pycron %B %Y [%%]"))
         .set_todo("NEXT")
         .add_children(vec![
-            org::NodeBuilder::new(dt.format("Pycron Maintenance %B [/]"))
+            org::NodeBuilder::new(dt.format("Pycron Development %B [/]"))
                 .set_todo("NEXT")
                 .build(),
             org::NodeBuilder::new(dt.format("Pycron Meetings %B [/]"))
@@ -278,7 +278,7 @@ fn division_support(dt:DateTime<Utc>) -> org::Node{
     let patm = org::NodeBuilder::new(dt.format("PATM %B %Y [%%]"))
         .set_todo("NEXT")
         .add_children(vec![
-            org::NodeBuilder::new(dt.format("PATM Maintenance %B [/]"))
+            org::NodeBuilder::new(dt.format("PATM Development %B [/]"))
                 .set_todo("NEXT")
                 .build(),
             org::NodeBuilder::new(dt.format("PATM Meetings %B [/]"))
