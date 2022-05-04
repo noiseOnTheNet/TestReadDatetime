@@ -204,7 +204,7 @@ fn data_analysis(dt:DateTime<Utc>) -> org::Node{
         map(|i|
             dt + Duration::days(i)
         ).filter(|d|
-                 d.weekday() == Weekday::Wed
+                 d.weekday() == Weekday::Mon
         ).map(|d| { 
             org::create_meeting("GDW Cruncher and Reporter", d, 16, 17,"snygard; mvezzoli; avaranasi", "zoom")
         }).collect();
